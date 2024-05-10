@@ -1,0 +1,8 @@
+/ Morning Rutine
+    / Take my clothes out of my room
+        / Clean my room
+            v Do my bed
+            - Take the trash out of my room
+            - Arrange my stuffs
+    v Take a shower
+    - Read some stuffs
