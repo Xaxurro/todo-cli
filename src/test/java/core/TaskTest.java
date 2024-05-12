@@ -2,9 +2,6 @@ package core;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,5 +16,7 @@ class TaskTest {
         List<String> linesList = Files.readAllLines(path);
         String linesStr = String.join("\n", linesList);
         TaskNode tree = TaskNode.build(linesStr);
+
+        tree.whereIsAlmostDone().print();
     }
 }

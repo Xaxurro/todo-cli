@@ -6,9 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Task {
-    private static String STATUS_NOT_DONE = "-";
-    private static String STATUS_ALMOST_DONE = "/";
-    private static String STATUS_DONE = "v";
     private static String DEEP_STR = "    ";
 
     private TaskStatus status;
@@ -16,23 +13,7 @@ public class Task {
 
     private static boolean doesRegexMatch(String str) {
 //        TODO FIX REGEX
-        return str.matches(String.format("^(%s)*(%s|%s|%s) ?.+$", DEEP_STR, STATUS_NOT_DONE, STATUS_ALMOST_DONE, STATUS_DONE));
-    }
-
-    private static TaskStatus matchStatusStr(String task) {
-        boolean notDone = task.startsWith(STATUS_NOT_DONE);
-        boolean almostDone = task.startsWith(STATUS_ALMOST_DONE);
-        boolean done = task.startsWith(STATUS_DONE);
-
-//        TODO Verify only one status is valid
-        if ((notDone ^ almostDone) || (almostDone ^ done) || (notDone ^ done)) {
-            return TaskStatus.NOT_DONE;
-        }
-
-        if (almostDone) return TaskStatus.ALMOST_DONE;
-        if (done) return TaskStatus.DONE;
-
-        return TaskStatus.NOT_DONE;
+        return str.matches(String.format("^(%s)*(%s|%s|%s) ?.+$", DEEP_STR, TaskStatus.NOT_DONE, TaskStatus.ALMOST_DONE, TaskStatus.DONE));
     }
 
 //        String format
@@ -43,16 +24,9 @@ public class Task {
         }
 
         Task task = new Task();
+        task.setStatus(TaskStatus.fromString(str));
 
-        task.setStatus(matchStatusStr(str));
-
-        String content = "";
-        switch (task.getStatus()) {
-            case NOT_DONE -> content = str.substring(STATUS_NOT_DONE.length());
-            case ALMOST_DONE -> content = str.substring(STATUS_ALMOST_DONE.length());
-            case DONE -> content = str.substring(STATUS_DONE.length());
-        }
-
+        String content = str.trim().substring(task.getStatus().toString().length()).trim();
         task.setContent(content);
 
         return task;
@@ -93,6 +67,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return status + " " + content.trim();
+        return status.toString() + " " + content.trim();
     }
 }

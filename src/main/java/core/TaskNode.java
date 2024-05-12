@@ -57,6 +57,10 @@ public class TaskNode {
 
     }
 
+    private boolean isRoot() {
+        return parent == null && task.getContent().equals("ROOT");
+    }
+
     public static TaskNode build(String fileContents) {
         List<String> lines = fileContents.lines().collect(Collectors.toList());
 
@@ -91,8 +95,86 @@ public class TaskNode {
         }
     }
 
+    public TaskNode getChild(int i) {
+        return children.get(i);
+    }
+
     @Override
     public String toString() {
         return task.toString();
+    }
+
+    private void print(int actualDeep) {
+        if (isRoot()) {
+            for (TaskNode child : children) {
+                child.print();
+            }
+            return;
+        }
+        String indent = "\t";
+        String taskContent = task.toString();
+        System.out.println(indent.repeat(actualDeep) + taskContent);
+        for (TaskNode child : children) {
+            child.print(actualDeep + 1);
+        }
+    }
+
+    public void print() {
+        print(0);
+    }
+
+    public TaskNode untilDeep(int actualDeep) {
+        TaskNode newNode = new TaskNode(task);
+
+        if (actualDeep <= 0) {
+            return newNode;
+        }
+        for (TaskNode child : children) {
+            newNode.addChild(child.untilDeep(actualDeep - 1));
+        }
+
+        return newNode;
+    }
+
+    public TaskNode whereIsDone() {
+        if (!isRoot() && task.getStatus() == TaskStatus.NOT_DONE) {
+            return null;
+        }
+        TaskNode newNode = new TaskNode(task);
+        for (TaskNode child : children) {
+            if (child.getTask().getStatus() != TaskStatus.NOT_DONE) {
+                newNode.addChild(child.whereIsDone());
+            }
+        }
+
+        return newNode;
+    }
+
+    public TaskNode whereIsNotDone() {
+        if (task.getStatus() == TaskStatus.DONE) {
+            return null;
+        }
+        TaskNode newNode = new TaskNode(task);
+        for (TaskNode child : children) {
+            if (child.getTask().getStatus() != TaskStatus.DONE) {
+                newNode.addChild(child.whereIsNotDone());
+            }
+        }
+
+        return newNode;
+    }
+
+    public TaskNode whereIsAlmostDone() {
+        if (task.getStatus() != TaskStatus.ALMOST_DONE) {
+            return null;
+        }
+        TaskNode newNode = new TaskNode(task);
+        for (TaskNode child : children) {
+            if (child.getTask().getStatus() == TaskStatus.ALMOST_DONE) {
+                newNode.addChild(child.whereIsNotDone());
+            }
+        }
+
+        return newNode;
     }
 }
