@@ -7,8 +7,8 @@
 
 	#Example: +PATH 
 	- [ ] Include Files for better organization
-
 	- [ ] Let users add comments
+	- [ ] Sections
 
 	#This is an example
 	- [ ] CLI
@@ -33,6 +33,8 @@
 			- [ ] Priority
 				- [ ] Less or equal
 				- [ ] More or equal
+
+			- [ ] Section
 
 			- [ ] Inlcude All Children
 
