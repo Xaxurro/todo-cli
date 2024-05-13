@@ -1,6 +1,7 @@
 # TODO
 *TODO* is a Open Source CLI tool to organize your tasks
 
+```
 - [ ] Planned Features
   
   #1 = Max Priority
@@ -41,3 +42,4 @@
 
     - [ ] Settings
       - [ ] Prefix
+```
