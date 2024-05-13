@@ -5,7 +5,7 @@
 	- [ ] Max Date for task
 	- [ ] Daily Tasks
 
-	#Example: $PATH 
+	#Example: +PATH 
 	- [ ] Include Files for better organization
 
 	- [ ] Let users add comments
