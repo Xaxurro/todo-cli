@@ -3,4 +3,4 @@
 
 Insipired by [when](http://www.lightandmatter.com/when/when.html) Another CLI tool to organize your tasks
 
-Here are the [Planned Features](https://github.com/Xaxurro/todo-cli/blob/main/PLANNED%20FEATURES.md) of the project
+Here are the [Planned Features](https://github.com/Xaxurro/todo-cli/blob/main/PLANNED%20FEATURES.txt) of the project
