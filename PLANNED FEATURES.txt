@@ -9,6 +9,7 @@
 	- [ ] Include Files for better organization
 	- [ ] Let users add comments
 	- [ ] Sections
+		- [ ] Set Section to one status
 
 	#This is an example
 	- [ ] CLI
@@ -21,7 +22,7 @@
 
 			- [/] Status
 				- [x] Not Done
-				- [x] Almost Done
+				- [/] Almost Done
 				- [ ] Only Almost Done
 				- [x] Done
 
@@ -39,4 +40,4 @@
 			- [ ] Inlcude All Children
 
 		- [ ] Settings
-			- [ ] Prefix
+			- [x] Prefix
