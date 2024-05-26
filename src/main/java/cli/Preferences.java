@@ -70,4 +70,8 @@ public class Preferences {
     private static String get(String preference, String defaultValue) {
         return preferencesMap.getOrDefault(preference, defaultValue);
     }
+
+    public static String getTodoConfigHome() {
+        return System.getProperty("TODO_CONFIG_HOME", System.getenv("HOME") + "/.todo");
+    }
 }

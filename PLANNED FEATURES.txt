@@ -3,9 +3,17 @@
 	#1 = Max Priority
 	- [ ] Priorities
 	- [ ] Max Date for task
-	- [ ] Daily Tasks
+	- [ ] Frequency Tasks
+		- [ ] Daily
+		- [ ] Weekly
+		- [ ] Monthly
+		- [ ] Yearly
+		- [ ] Repeat
+			- [ ] after x day(s)
+			- [ ] on x day(s) of week
+			- [ ] on x day of month
 
-	#Example: +PATH 
+	#Example: +PATH
 	- [ ] Include Files for better organization
 	- [ ] Let users add comments
 	- [ ] Sections
@@ -14,7 +22,7 @@
 	#This is an example
 	- [ ] CLI
 		- [ ] Edit
-			- [ ] Update status after each operation
+			- [ ] Update status before each operation
 
 		#Can use as many as you want
 		- [ ] Filter by :
@@ -39,5 +47,5 @@
 
 			- [ ] Inlcude All Children
 
-		- [ ] Settings
+		- [x] Settings
 			- [x] Prefix

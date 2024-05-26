@@ -2,6 +2,8 @@ package core;
 
 import cli.Preferences;
 import core.Task.Node;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,15 +14,20 @@ import java.util.List;
 
 
 class TaskTest {
-    @Test
-    void test1Building() throws IOException {
-        Preferences.loadPreferences("src/test/resources/preferences");
+	@BeforeAll
+	static void setTestProperties() {
+		System.setProperty("TODO_CONFIG_HOME", "src/test/resources");
+	}
+	@Test
+	void test1Building() throws IOException {
+		Preferences.loadPreferences("src/test/resources/preferences");
 
-        Path path = Paths.get("src/test/resources/test.txt");
-        List<String> linesList = Files.readAllLines(path);
-        String linesStr = String.join("\n", linesList);
-        Node tree = Node.build(linesStr);
+		String todoPathStr = "src/test/resources/test.txt";
+//        String todoPathStr = "/home/xaxurro/.todo/todo";
+		Path todoPath = Paths.get(todoPathStr);
+		List<String> linesList = Files.readAllLines(todoPath);
+		Node tree = Node.build(linesList);
 
-        tree.whereIsDone().print();
-    }
+		tree.print();
+	}
 }

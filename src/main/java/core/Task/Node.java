@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
 
 @NoArgsConstructor
 @Getter
@@ -22,58 +23,84 @@ public class Node {
     }
 
 //
-    private static void sortTasksTree(Node tree, List<String> taskStrList) {
+    private static void createTaskTree(Node root, List<String> taskStrList) throws IOException {
         int actualDeep = 0;
-        Node previousNode = tree;
+        Node previousNode = root;
 
         for (String taskStr : taskStrList) {
-            int taskDeep = Task.getDeep(taskStr);
-
-            Task actualTask = Task.build(taskStr);
-            Node actualNode = new Node(actualTask);
-
-            if (taskDeep > actualDeep) {
-                previousNode.addChild(actualNode);
-                actualDeep++;
-
-            } else if (taskDeep == actualDeep) {
-                if (previousNode != tree) {
-                    previousNode.getParent().addChild(actualNode);
-                    continue;
-                }
-                tree.addChild(actualNode);
-
-            } else if (taskDeep < actualDeep) {
-                Node ancestorNode = previousNode;
-                while (taskDeep < actualDeep) {
-                    ancestorNode = ancestorNode.getParent();
-                    actualDeep--;
-                }
-                ancestorNode.getParent().addChild(actualNode);
+            if (taskStr.isEmpty()) {
+                continue;
             }
 
-            previousNode = actualNode;
+            int taskDeep = RegexHandler.getDeep(taskStr) + 1;
+            Node parent;
+            if (previousNode == root) {
+                parent = root;
+            } else {
+                parent = findParent(previousNode, taskDeep, actualDeep);
+            }
+
+            Node actualNode = new Node();
+
+            if (RegexHandler.fileRegex(taskStr).matches()) {
+                Matcher fileMatcher = RegexHandler.fileRegex(taskStr);
+                if (fileMatcher.matches()) {
+                    actualNode = FileHandler.fromFile(taskStr, fileMatcher);
+                    parent.addChildren(actualNode.children);
+                }
+            }
+            if (RegexHandler.taskRegex(taskStr).matches()) {
+                Matcher taskMatcher = RegexHandler.taskRegex(taskStr);
+                if (taskMatcher.matches()) {
+                    actualNode = FileHandler.fromString(taskStr, taskMatcher);
+                    parent.addChild(actualNode);
+                    previousNode = actualNode;
+                }
+            }
+
+
+            actualDeep = previousNode.getDeep();
         }
 
+    }
+
+    private static Node findParent(Node previousNode, int taskDeep, int actualDeep) {
+        if (taskDeep > actualDeep) {
+            return previousNode;
+
+        } else if (taskDeep == actualDeep) {
+            return previousNode.getParent();
+
+        } else if (taskDeep < actualDeep) {
+            Node ancestorNode = previousNode;
+            while (taskDeep < actualDeep) {
+                ancestorNode = ancestorNode.getParent();
+                actualDeep--;
+            }
+            if (ancestorNode.isRoot()) {
+                return ancestorNode;
+            }
+            return ancestorNode.getParent();
+        }
+
+        throw new RuntimeException("There is no suitable parent for task after: " + previousNode);
     }
 
     private boolean isRoot() {
         return parent == null && task.getContent().equals("ROOT");
     }
 
-    public static Node build(String fileContents) {
-        List<String> lines = fileContents.lines().collect(Collectors.toList());
-
-        Node tree = new Node();
-        tree.setTask(Task.root());
+    public static Node build(List<String> lines) throws IOException {
+        Node root = new Node();
+        root.setTask(Task.root());
 
         if (lines.size() == 0) {
-            return tree;
+            return root;
         }
 
-        sortTasksTree(tree, lines);
+        createTaskTree(root, lines);
 
-        return tree;
+        return root;
     }
 
     public void setParent(Node newParent) {
@@ -99,8 +126,23 @@ public class Node {
         return children.get(i);
     }
 
+    public int getDeep() {
+        Node pointer = this;
+        int deep = 0;
+
+        while (!pointer.isRoot()) {
+            pointer = pointer.getParent();
+            deep++;
+        }
+
+        return deep;
+    }
+
     @Override
     public String toString() {
+        if (isRoot()) {
+            return "ROOT";
+        }
         return task.toString();
     }
 
