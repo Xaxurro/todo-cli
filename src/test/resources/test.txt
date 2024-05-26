@@ -1,8 +1,34 @@
-- [/] Morning Rutine
-    - [/] Take my clothes out of my room
-        - [/] Clean my room
-            - [x] Do my bed
-            - [ ] Take the trash out of my room
-            - [ ] Arrange my stuffs
-    - [x] Take a shower
-    - [ ] Read some stuffs
+1d [ ] Morning Routine
+	1d [ ] Wake Up
+	1d [ ] P a i n
+	2d [ ] Brush my teeth
+	2d [ ] Take a shower
+	3d [ ] Clean my room
+		- [ ] Throw away broken socks
+	1d [ ] Eat Breakfast
+
+- [ ] Work
+	1 [ ] EndPoints
+		- [ ] /api/some/randomendpoint1
+		- [ ] /api/some/randomendpoint2
+		- [ ] /api/some/randomendpoint3
+		- [ ] /api/some/randomendpoint4
+		- [ ] /api/some/randomendpoint5
+	2w [ ] Meeting
+		- [ ] Inform that I made some random endpoints
+		- [ ] Listen to them
+		- [ ] Grab a Coffee
+		- [ ] Fall asleep in the middle of the meeting
+
+- [ ] Workout
+	- [ ] Arms
+	- [ ] Legs
+	- [ ] Cardio
+
+- [ ] Check if my friends are alive and well
+
+- [ ] Projects
+	- [ ] TODO
+		+ projects/todo
+	- [ ] Calculator
+		+ projects/calculator
