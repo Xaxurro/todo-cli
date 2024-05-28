@@ -1,5 +1,6 @@
 package core.Task;
 
+import cli.Preferences;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,23 +16,38 @@ import java.util.regex.Matcher;
 public class Node {
     Node parent = null;
     Task task = null;
-//    int deep = 0;
     List<Node> children = new ArrayList<>();
 
     public Node(Task task) {
         this.task = task;
     }
 
-//
-    private static void createTaskTree(Node root, List<String> taskStrList) throws IOException {
+    public static Node root() {
+        return new Node(Task.root());
+    }
+
+    public static void createTaskTree(Node root, List<String> taskStrList) throws IOException {
         int actualDeep = 0;
         Node previousNode = root;
 
+        String actualTag = "";
+
         for (String taskStr : taskStrList) {
             if (taskStr.isEmpty()) {
+                actualTag = "";
                 continue;
             }
 
+            if (taskStr.strip().startsWith(Preferences.getCommentStr())) {
+                continue;
+            }
+
+            if (taskStr.strip().startsWith(Preferences.getTagStr())) {
+                actualTag = taskStr.strip().substring(Preferences.getTagStr().length());
+                continue;
+            }
+
+//          Finds parent for new Node, 1 gets added to deep because root has deep = 0
             int taskDeep = RegexHandler.getDeep(taskStr) + 1;
             Node parent;
             if (previousNode == root) {
@@ -40,28 +56,42 @@ public class Node {
                 parent = findParent(previousNode, taskDeep, actualDeep);
             }
 
-            Node actualNode = new Node();
+//          Creates new node
+            Node actualNode;
 
+//          If it's an appended file, add the children to the parent
             if (RegexHandler.fileRegex(taskStr).matches()) {
                 Matcher fileMatcher = RegexHandler.fileRegex(taskStr);
                 if (fileMatcher.matches()) {
-                    actualNode = FileHandler.fromFile(taskStr, fileMatcher);
+                    actualNode = FileHandler.fileNode(taskStr, fileMatcher);
+                    addTag(actualTag, actualNode);
                     parent.addChildren(actualNode.children);
                 }
             }
+
+//          If it's a task, add the new node to the parent
             if (RegexHandler.taskRegex(taskStr).matches()) {
                 Matcher taskMatcher = RegexHandler.taskRegex(taskStr);
                 if (taskMatcher.matches()) {
-                    actualNode = FileHandler.fromString(taskStr, taskMatcher);
+                    actualNode = FileHandler.taskNode(taskMatcher);
+                    addTag(actualTag, actualNode);
                     parent.addChild(actualNode);
                     previousNode = actualNode;
                 }
             }
 
-
             actualDeep = previousNode.getDeep();
         }
 
+    }
+
+    public static void addTag(String tag, Node node) {
+        if (tag.isBlank()) return;
+
+        node.getTask().addTag(tag);
+        for (Node child : node.getChildren()) {
+            addTag(tag, child);
+        }
     }
 
     private static Node findParent(Node previousNode, int taskDeep, int actualDeep) {
@@ -90,19 +120,6 @@ public class Node {
         return parent == null && task.getContent().equals("ROOT");
     }
 
-    public static Node build(List<String> lines) throws IOException {
-        Node root = new Node();
-        root.setTask(Task.root());
-
-        if (lines.size() == 0) {
-            return root;
-        }
-
-        createTaskTree(root, lines);
-
-        return root;
-    }
-
     public void setParent(Node newParent) {
         if (this.parent != null) {
             this.parent.getChildren().remove(this);
@@ -112,13 +129,16 @@ public class Node {
     }
 
     public void addChild(Node child) {
+        if (child == null) return;
         child.setParent(this);
         children.add(child);
     }
 
-    public void addChildren(List<Node> children) {
-        for (Node child : children) {
-            addChild(child);
+    public void addChildren(List<Node> foreingChildren) {
+        children.addAll(foreingChildren);
+        int amountOfForeingChildren = foreingChildren.size();
+        for (int i = 0; i < amountOfForeingChildren; i++) {
+            foreingChildren.get(0).setParent(this);
         }
     }
 
@@ -163,6 +183,20 @@ public class Node {
 
     public void print() {
         print(0);
+    }
+
+    public Node withTag(String tag) {
+        Node newNode = new Node(task);
+
+        if (!isRoot() && !task.hasTag(tag)) {
+            return null;
+        }
+
+        for (Node child : children) {
+            newNode.addChild(child.withTag(tag));
+        }
+
+        return newNode;
     }
 
     public Node untilDeep(int actualDeep) {

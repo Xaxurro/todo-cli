@@ -95,7 +95,8 @@ public class RegexHandler {
 	}
 
 	public static Matcher fileRegex(String str) {
-		String pathRegex = "(\\/)?(?:\\w+\\/)*\\w+";
+		String validNamesRegexUnix = "[\\wñÑ \\\\\\-_\\.]+";
+		String pathRegex = String.format("(~?\\/)?(?:%s\\/)*%s", validNamesRegexUnix, validNamesRegexUnix);
 
 		String fileRegex = String.format("^%s\\+ ?(%s)$", deepRegex(), pathRegex);
 

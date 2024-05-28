@@ -12,7 +12,17 @@ import java.util.regex.Matcher;
 public class FileHandler {
 	public static String TODO_CONFIG_HOME = Preferences.getTodoConfigHome();
 
-	public static Node fromString(String str, Matcher matcher) throws IOException {
+	public static Node readFile(String pathStr) throws IOException {
+		Path path = Paths.get(pathStr);
+		List<String> lines = Files.readAllLines(path);
+
+		Node root = Node.root();
+		Node.createTaskTree(root, lines);
+
+		return root;
+	}
+
+	public static Node taskNode(Matcher matcher) {
 		Task task = new Task();
 
 		int priority = 0;
@@ -36,12 +46,23 @@ public class FileHandler {
 		return new Node(task);
 	}
 
-	static Node fromFile(String path, Matcher matcher) throws IOException {
-		if (matcher.group(2) == null) {
-			path = Preferences.getTodoConfigHome() + "/" + matcher.group(1);
+	public static Node fileNode(String path, Matcher fileMatcher) throws IOException {
+		if (fileMatcher.group(2) == null) {
+			path = TODO_CONFIG_HOME + "/" + fileMatcher.group(1);
+		}else if (fileMatcher.group(2).equals("~/")) {
+			path = System.getenv("HOME") + "/" + fileMatcher.group(1).substring(2);
 		}
 		Path todoPath = Paths.get(path);
 		List<String> linesList = Files.readAllLines(todoPath);
-		return Node.build(linesList);
+
+		Node root = Node.root();
+
+		if (linesList.size() == 0) {
+			return root;
+		}
+
+		Node.createTaskTree(root, linesList);
+
+		return root;
 	}
 }
