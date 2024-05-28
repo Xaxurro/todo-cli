@@ -58,6 +58,14 @@ public class Preferences {
         return get("frequencyYearlyStr", "y");
     }
 
+    public static String getTagStr() {
+        return get("tagStr", "@");
+    }
+
+    public static String getCommentStr() {
+        return get("commentStr", "#");
+    }
+
     public static int getTaskDeepStrLength() {
         return Integer.valueOf(get("deepStrLength", "4"));
     }

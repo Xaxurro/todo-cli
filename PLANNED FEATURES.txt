@@ -1,9 +1,9 @@
-- [ ] Planned Features
+- [/] Planned Features
 
 	#1 = Max Priority
-	- [ ] Priorities
+	- [x] Priorities
 	- [ ] Max Date for task
-	- [ ] Frequency Tasks
+	- [/] Frequency Tasks
 		- [ ] Daily
 		- [ ] Weekly
 		- [ ] Monthly
@@ -14,10 +14,10 @@
 			- [ ] on x day of month
 
 	#Example: +PATH
-	- [ ] Include Files for better organization
+	- [x] Append Files for better organization
 	- [ ] Let users add comments
-	- [ ] Sections
-		- [ ] Set Section to one status
+	- [ ] Tag
+		- [ ] Set Tag to one status
 
 	#This is an example
 	- [ ] CLI
@@ -25,8 +25,8 @@
 			- [ ] Update status before each operation
 
 		#Can use as many as you want
-		- [ ] Filter by :
-			- [ ] All
+		- [/] Filter by :
+			- [x] All
 
 			- [/] Status
 				- [x] Not Done
@@ -43,9 +43,9 @@
 				- [ ] Less or equal
 				- [ ] More or equal
 
-			- [ ] Section
+			- [x] Tag
 
-			- [ ] Inlcude All Children
+			- [ ] Include All Children
 
 		- [x] Settings
 			- [x] Prefix
