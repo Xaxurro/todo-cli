@@ -15,8 +15,8 @@
 
 	#Example: +PATH
 	- [x] Append Files for better organization
-	- [ ] Let users add comments
-	- [ ] Tag
+	- [x] Let users add comments
+	- [/] Tag
 		- [ ] Set Tag to one status
 
 	#This is an example
@@ -30,7 +30,7 @@
 
 			- [/] Status
 				- [x] Not Done
-				- [/] Almost Done
+				- [x] Almost Done
 				- [ ] Only Almost Done
 				- [x] Done
 
@@ -44,8 +44,6 @@
 				- [ ] More or equal
 
 			- [x] Tag
-
-			- [ ] Include All Children
 
 		- [x] Settings
 			- [x] Prefix

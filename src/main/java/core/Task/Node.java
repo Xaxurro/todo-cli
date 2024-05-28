@@ -65,7 +65,8 @@ public class Node {
                 if (fileMatcher.matches()) {
                     actualNode = FileHandler.fileNode(taskStr, fileMatcher);
                     addTag(actualTag, actualNode);
-                    parent.addChildren(actualNode.children);
+
+                    parent.addChildren(actualNode.getChildren());
                 }
             }
 
@@ -116,8 +117,8 @@ public class Node {
         throw new RuntimeException("There is no suitable parent for task after: " + previousNode);
     }
 
-    private boolean isRoot() {
-        return parent == null && task.getContent().equals("ROOT");
+    public boolean isRoot() {
+        return parent == null && task.getContent().equals("ROOT") && task.getPriority() == 0;
     }
 
     public void setParent(Node newParent) {
@@ -135,15 +136,25 @@ public class Node {
     }
 
     public void addChildren(List<Node> foreingChildren) {
+        if (foreingChildren.isEmpty()) return;
         children.addAll(foreingChildren);
-        int amountOfForeingChildren = foreingChildren.size();
-        for (int i = 0; i < amountOfForeingChildren; i++) {
-            foreingChildren.get(0).setParent(this);
+        for (int i = 0; i < children.size(); i++) {
+            children.get(i).setParent(this);
         }
     }
 
     public Node getChild(int i) {
         return children.get(i);
+    }
+
+    public int size() {
+        int size = 0;
+        for (Node child : getChildren()) {
+            size += child.size();
+        }
+
+        size += children.size();
+        return size;
     }
 
     public int getDeep() {
@@ -185,72 +196,20 @@ public class Node {
         print(0);
     }
 
-    public Node withTag(String tag) {
-        Node newNode = new Node(task);
+    public Node duplicateWithChildren() {
+        Node nodeDuplicated = new Node(task);
 
-        if (!isRoot() && !task.hasTag(tag)) {
-            return null;
-        }
-
+        List<Node> childrenDuplicated = new ArrayList<>();
         for (Node child : children) {
-            newNode.addChild(child.withTag(tag));
+            childrenDuplicated.add(child.duplicateWithChildren());
         }
 
-        return newNode;
+        nodeDuplicated.setChildren(childrenDuplicated);
+        return nodeDuplicated;
     }
 
-    public Node untilDeep(int actualDeep) {
-        Node newNode = new Node(task);
-
-        if (actualDeep <= 0) {
-            return newNode;
-        }
-        for (Node child : children) {
-            newNode.addChild(child.untilDeep(actualDeep - 1));
-        }
-
-        return newNode;
+    public Node duplicate() {
+        Node nodeDuplicated = new Node(task);
+        return nodeDuplicated;
     }
-
-    public Node whereIsDone() {
-        if (!isRoot() && task.getStatus() == Status.NOT_DONE) {
-            return null;
-        }
-        Node newNode = new Node(task);
-        for (Node child : children) {
-            if (child.getTask().getStatus() != Status.NOT_DONE) {
-                newNode.addChild(child.whereIsDone());
-            }
-        }
-
-        return newNode;
-    }
-
-    public Node whereIsNotDone() {
-        if (task.getStatus() == Status.DONE) {
-            return null;
-        }
-        Node newNode = new Node(task);
-        for (Node child : children) {
-            if (child.getTask().getStatus() != Status.DONE) {
-                newNode.addChild(child.whereIsNotDone());
-            }
-        }
-
-        return newNode;
-    }
-
-//    public TaskNode whereIsAlmostDone() {
-//        if (task.getStatus() != TaskStatus.ALMOST_DONE) {
-//            return null;
-//        }
-//        TaskNode newNode = new TaskNode(task);
-//        for (TaskNode child : children) {
-//            if (child.getTask().getStatus() == TaskStatus.ALMOST_DONE) {
-//                newNode.addChild(child.whereIsNotDone());
-//            }
-//        }
-//
-//        return newNode;
-//    }
 }
