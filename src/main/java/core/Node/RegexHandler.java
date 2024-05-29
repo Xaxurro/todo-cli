@@ -1,6 +1,8 @@
-package core.Task;
+package core.Node;
 
 import cli.Preferences;
+import core.Task.Frequency;
+import core.Task.Status;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
