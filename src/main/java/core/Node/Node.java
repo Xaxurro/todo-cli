@@ -1,6 +1,7 @@
-package core.Task;
+package core.Node;
 
 import cli.Preferences;
+import core.Task.Task;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,15 +9,17 @@ import lombok.Setter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class Node {
-    Node parent = null;
-    Task task = null;
-    List<Node> children = new ArrayList<>();
+    private Node parent = null;
+    private Task task = null;
+    private List<Node> children = new ArrayList<>();
 
     public Node(Task task) {
         this.task = task;
@@ -211,5 +214,18 @@ public class Node {
     public Node duplicate() {
         Node nodeDuplicated = new Node(task);
         return nodeDuplicated;
+    }
+
+    public void forEachChild(Consumer<Node> consumer) {
+        consumer.accept(this);
+        children.forEach(n -> forEachChild(consumer));
+    }
+
+    public void forEachChild(Consumer<Node> consumer, Predicate<Node> notVisitChildrenIf) {
+        if (!notVisitChildrenIf.test(this)) {
+            children.forEach(child -> child.forEachChild(consumer, notVisitChildrenIf));
+        } else {
+            consumer.accept(this);
+        }
     }
 }

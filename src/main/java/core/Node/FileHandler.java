@@ -1,6 +1,9 @@
-package core.Task;
+package core.Node;
 
 import cli.Preferences;
+import core.Task.Frequency;
+import core.Task.Status;
+import core.Task.Task;
 
 import java.io.IOException;
 import java.nio.file.Files;
