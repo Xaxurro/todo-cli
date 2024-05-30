@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SearchOperations {
+public class NodeOperations {
 	private static Consumer<Node> childConsumer(Node root) {
 		Consumer<Node> childConsumer = child -> root.addChild(child.duplicateWithChildren());
 		return childConsumer;
@@ -27,7 +27,7 @@ public class SearchOperations {
 			return newNode;
 		}
 		for (Node child : node.getChildren()) {
-			newNode.addChild(SearchOperations.stopAtDeep(actualDeep - 1, child));
+			newNode.addChild(NodeOperations.stopAtDeep(actualDeep - 1, child));
 		}
 
 		return newNode;
@@ -68,7 +68,7 @@ public class SearchOperations {
 		Node newNode = node.duplicate();
 		for (Node child : node.getChildren()) {
 			if (child.getTask().getStatus() != Status.NOT_DONE) {
-				newNode.addChild(SearchOperations.whereIsDone(child));
+				newNode.addChild(NodeOperations.whereIsDone(child));
 			}
 		}
 
@@ -82,7 +82,7 @@ public class SearchOperations {
 		Node newNode = node.duplicate();
 		for (Node child : node.getChildren()) {
 			if (child.getTask().getStatus() != Status.DONE) {
-				newNode.addChild(SearchOperations.whereIsNotDone(child));
+				newNode.addChild(NodeOperations.whereIsNotDone(child));
 			}
 		}
 
@@ -98,7 +98,7 @@ public class SearchOperations {
 
         for (Node child : node.getChildren()) {
             if (child.getTask().getStatus() == Status.ALMOST_DONE) {
-                newChildren.add(SearchOperations.whereIsAlmostDone(child));
+                newChildren.add(NodeOperations.whereIsAlmostDone(child));
             } else if (!node.isRoot()) {
 				newChildren.add(child.duplicate());
 			}
@@ -108,4 +108,29 @@ public class SearchOperations {
 
         return newNode;
     }
+
+	public static Status updateStatus(Node node) {
+		Status nodeStatus = node.getTask().getStatus();
+		if (node.getChildren().isEmpty()) {
+			return nodeStatus;
+		}
+
+		boolean hasDifferentStatus = false;
+		Status previousChildStatus = null;
+		for (Node child : node.getChildren()) {
+			Status actualChildStatus = updateStatus(child);
+			if (previousChildStatus != null && previousChildStatus != actualChildStatus) {
+				hasDifferentStatus = true;
+			}
+
+			previousChildStatus = actualChildStatus;
+		}
+
+		if (hasDifferentStatus) {
+			node.getTask().setStatus(Status.ALMOST_DONE);
+		} else {
+			node.getTask().setStatus(previousChildStatus);
+		}
+		return node.getTask().getStatus();
+	}
 }

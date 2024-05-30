@@ -39,7 +39,7 @@ public class Task {
         if (content.equals("ROOT") && priority == 0) {
             return "ROOT";
         }
-        return frequency.toString() + " " + status.toString() + " " + content.trim();
+        return priority + frequency.toString() + " " + status.toString() + " " + content.trim();
     }
 
     public void addTag(String newTag) {
