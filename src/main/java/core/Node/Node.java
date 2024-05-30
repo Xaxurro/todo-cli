@@ -33,11 +33,11 @@ public class Node {
         int actualDeep = 0;
         Node previousNode = root;
 
-        String actualTag = "";
+        List<String> actualTags = new ArrayList<>();
 
         for (String taskStr : taskStrList) {
             if (taskStr.isEmpty()) {
-                actualTag = "";
+                actualTags = new ArrayList<>();
                 continue;
             }
 
@@ -46,7 +46,7 @@ public class Node {
             }
 
             if (taskStr.strip().startsWith(Preferences.getTagStr())) {
-                actualTag = taskStr.strip().substring(Preferences.getTagStr().length());
+                actualTags.add(taskStr.strip().substring(Preferences.getTagStr().length()));
                 continue;
             }
 
@@ -60,41 +60,40 @@ public class Node {
             }
 
 //          Creates new node
-            Node actualNode;
-
-//          If it's an appended file, add the children to the parent
-            if (RegexHandler.fileRegex(taskStr).matches()) {
-                Matcher fileMatcher = RegexHandler.fileRegex(taskStr);
-                if (fileMatcher.matches()) {
-                    actualNode = FileHandler.fileNode(taskStr, fileMatcher);
-                    addTag(actualTag, actualNode);
-
-                    parent.addChildren(actualNode.getChildren());
-                }
-            }
+            Node actualNode = new Node();
 
 //          If it's a task, add the new node to the parent
-            if (RegexHandler.taskRegex(taskStr).matches()) {
-                Matcher taskMatcher = RegexHandler.taskRegex(taskStr);
-                if (taskMatcher.matches()) {
-                    actualNode = FileHandler.taskNode(taskMatcher);
-                    addTag(actualTag, actualNode);
-                    parent.addChild(actualNode);
-                    previousNode = actualNode;
-                }
+            Matcher taskMatcher = RegexHandler.taskRegex(taskStr);
+            if (taskMatcher.matches()) {
+                actualNode = FileHandler.taskNode(taskMatcher);
+
+                parent.addChild(actualNode);
+                previousNode = actualNode;
             }
+
+//          If it's an appended file, add the children to the parent
+            Matcher fileMatcher = RegexHandler.fileRegex(taskStr);
+            if (fileMatcher.matches()) {
+                actualNode = FileHandler.fileNode(taskStr, fileMatcher);
+
+                parent.addChildren(actualNode.getChildren());
+            }
+
+            addTag(actualTags, actualNode);
 
             actualDeep = previousNode.getDeep();
         }
 
     }
 
-    public static void addTag(String tag, Node node) {
-        if (tag.isBlank()) return;
+    public static void addTag(List<String> tags, Node node) {
+        if (tags.isEmpty()) return;
 
-        node.getTask().addTag(tag);
+        for (String tag : tags) {
+            node.getTask().addTag(tag);
+        }
         for (Node child : node.getChildren()) {
-            addTag(tag, child);
+            addTag(tags, child);
         }
     }
 

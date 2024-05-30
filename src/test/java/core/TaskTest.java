@@ -3,8 +3,9 @@ package core;
 import cli.Preferences;
 import core.Node.FileHandler;
 import core.Node.Node;
-import core.Node.SearchOperations;
+import core.Node.NodeOperations;
 import core.Task.Frequency;
+import core.Task.Status;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,25 +20,33 @@ class TaskTest {
 //		System.setProperty("TODO_CONFIG_HOME", "/home/xaxurro/.todo");
 	}
 	@Test
-	void test1Building() throws IOException {
+	void test1SearchOperations() throws IOException {
 		Preferences.loadPreferences("src/test/resources/preferences");
 
 		String todoPathStr = "src/test/resources/test.txt";
-//        String todoPathStr = "/home/xaxurro/.todo/todo";
 		Node tree = FileHandler.readFile(todoPathStr);
 
-		Assertions.assertEquals(10, SearchOperations.withTag("Daily", tree).size());
-		Assertions.assertEquals(12, SearchOperations.whereIsDone(tree).size());
-		Assertions.assertEquals(17, SearchOperations.whereIsAlmostDone(tree).size());
-		Assertions.assertEquals(34, SearchOperations.whereIsNotDone(tree).size());
-		Assertions.assertEquals(6, SearchOperations.stopAtDeep(1, tree).size());
-		Assertions.assertEquals(5, SearchOperations.beginAtDeep(4, tree).size());
-		Assertions.assertEquals(11, SearchOperations.withPriorityGreaterThan(2, tree).size());
-		Assertions.assertEquals(21, SearchOperations.withPriorityLesserThan(2, tree).size());
-		Assertions.assertEquals(10, SearchOperations.withFrequency(Frequency.DAILY, tree).size());
-		Assertions.assertEquals(5, SearchOperations.withFrequency(Frequency.WEEKLY, tree).size());
+		Assertions.assertEquals(10, NodeOperations.withTag("Daily", tree).size());
+		Assertions.assertEquals(12, NodeOperations.whereIsDone(tree).size());
+		Assertions.assertEquals(17, NodeOperations.whereIsAlmostDone(tree).size());
+		Assertions.assertEquals(34, NodeOperations.whereIsNotDone(tree).size());
+		Assertions.assertEquals(6, NodeOperations.stopAtDeep(1, tree).size());
+		Assertions.assertEquals(5, NodeOperations.beginAtDeep(4, tree).size());
+		Assertions.assertEquals(11, NodeOperations.withPriorityGreaterThan(2, tree).size());
+		Assertions.assertEquals(21, NodeOperations.withPriorityLesserThan(2, tree).size());
+		Assertions.assertEquals(10, NodeOperations.withFrequency(Frequency.DAILY, tree).size());
+		Assertions.assertEquals(5, NodeOperations.withFrequency(Frequency.WEEKLY, tree).size());
+	}
 
-		tree = SearchOperations.withFrequency(Frequency.DAILY, tree);
-		tree.print();
+	@Test
+	void test2() throws IOException {
+		Preferences.loadPreferences("src/test/resources/preferences");
+
+		String todoPathStr = "src/test/resources/test.txt";
+		Node node = FileHandler.readFile(todoPathStr);
+		node = NodeOperations.withTag("Daily", node);
+
+		NodeOperations.updateStatus(node);
+		Assertions.assertEquals(Status.ALMOST_DONE, node.getChild(0).getTask().getStatus());
 	}
 }

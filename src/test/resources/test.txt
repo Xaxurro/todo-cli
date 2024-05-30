@@ -1,5 +1,6 @@
-@Daily Routine
-1d [/] Morning Routine
+@Daily
+@Routine
+1d [ ] Morning Routine
 	1d [x] Wake Up
 	1d [x] P a i n
 	2d [ ] Brush my teeth
@@ -28,7 +29,8 @@
 	- [ ] AWS Course
 	- [ ] Angular Course
 
-@Workout Routine
+@Workout
+@Routine
 - [ ] Workout
 	- [ ] Arms
 	- [ ] Legs
