@@ -22,18 +22,17 @@
 		- [x] Let users add Tags
 
 	#This is an example
-	- [ ] CLI
+	- [/] CLI
 		- [ ] Edit
 			- [ ] Update status before each operation
 
 		#Can use as many as you want
-		- [/] Filter by :
+		- [/] List by:
 			- [x] All
 
 			- [/] Status
 				- [x] Not Done
 				- [x] Almost Done
-				- [ ] Only Almost Done
 				- [x] Done
 
 			- [ ] Date

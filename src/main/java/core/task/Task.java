@@ -1,4 +1,4 @@
-package core.Task;
+package core.task;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +39,8 @@ public class Task {
         if (content.equals("ROOT") && priority == 0) {
             return "ROOT";
         }
-        return priority + frequency.toString() + " " + status.toString() + " " + content.trim();
+        String priortityStr = priority > 0 ? String.valueOf(priority) : "";
+        return priortityStr + frequency.toString() + " " + status.toString() + " " + content.trim();
     }
 
     public void addTag(String newTag) {

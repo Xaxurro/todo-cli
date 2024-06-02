@@ -1,7 +1,7 @@
-package core.Node;
+package core.node;
 
 import cli.Preferences;
-import core.Task.Task;
+import core.task.Task;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

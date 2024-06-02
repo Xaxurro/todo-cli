@@ -1,4 +1,4 @@
-package core.Task;
+package core.task;
 
 import cli.Preferences;
 
@@ -20,6 +20,17 @@ public enum Frequency {
     }
 
     public static Frequency fromString(String task) {
+        switch (task) {
+            case "daily":
+                return DAILY;
+            case "weekly":
+                return WEEKLY;
+            case "monthly":
+                return MONTHLY;
+            case "yearly":
+                return YEARLY;
+        }
+
         task = task.trim();
         boolean daily = task.startsWith(DAILY.toString());
         boolean weekly = task.startsWith(WEEKLY.toString());

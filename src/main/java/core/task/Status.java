@@ -1,4 +1,4 @@
-package core.Task;
+package core.task;
 
 import cli.Preferences;
 
@@ -18,6 +18,15 @@ public enum Status {
     }
 
     public static Status fromString(String task) {
+        switch (task) {
+            case "not":
+                return NOT_DONE;
+            case "almost":
+                return ALMOST_DONE;
+            case "done":
+                return DONE;
+        }
+
         task = task.trim();
         boolean notDone = task.equals(NOT_DONE.toString());
         boolean almostDone = task.equals(ALMOST_DONE.toString());

@@ -1,7 +1,7 @@
-package core.Node;
+package core.node;
 
-import core.Task.Frequency;
-import core.Task.Status;
+import core.task.Frequency;
+import core.task.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +40,17 @@ public class NodeOperations {
 		return root;
 	}
 
-	public static Node withPriorityGreaterThan(int priority, Node node) {
-		Node root = Node.root();
-
-		node.forEachChild(childConsumer(root), child -> child.getTask().getPriority() >= priority);
-		return root;
-	}
-
-	public static Node withPriorityLesserThan(int priority, Node node) {
+	public static Node withMaxPriority(int priority, Node node) {
 		Node root = Node.root();
 
 		node.forEachChild(childConsumer(root), child -> child.getTask().getPriority() <= priority && child.getTask().getPriority() != 0);
+		return root;
+	}
+
+	public static Node withMinPriority(int priority, Node node) {
+		Node root = Node.root();
+
+		node.forEachChild(childConsumer(root), child -> child.getTask().getPriority() >= priority);
 		return root;
 	}
 
