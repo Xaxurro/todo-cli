@@ -21,6 +21,7 @@ public class FileHandler {
 
 		Node root = Node.root();
 		Node.createTaskTree(root, lines);
+		NodeOperations.updateStatus(root);
 
 		return root;
 	}

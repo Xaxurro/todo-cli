@@ -14,7 +14,6 @@ public class Task {
     private Frequency frequency;
     private int priority = 0;
     private String content;
-    private List<String> tags = new ArrayList<>();
 
 //        String format
 //        <STATUS><Content>
@@ -41,18 +40,5 @@ public class Task {
         }
         String priortityStr = priority > 0 ? String.valueOf(priority) : "";
         return priortityStr + frequency.toString() + " " + status.toString() + " " + content.trim();
-    }
-
-    public void addTag(String newTag) {
-        tags.add(newTag);
-    }
-    public boolean hasTag(String tag) {
-        for (int i = 0; i < tags.size(); i++) {
-            String actualTag = tags.get(i);
-            if (actualTag.contains(tag)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -1,7 +1,7 @@
 package cli.commands;
 
+import cli.ExitStatus;
 import cli.Preferences;
-import cli.Utils;
 import core.node.FileHandler;
 import core.node.Node;
 import core.node.NodeOperations;
@@ -9,10 +9,7 @@ import core.task.Frequency;
 import core.task.Status;
 import picocli.CommandLine.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 @Command(name = "l",
 		description = "List TODOs",
@@ -32,12 +29,6 @@ public class ListCommand implements Runnable {
 			description = "Preferences File",
 			paramLabel = "Preferences File")
 	String preferencesFilePathStr = Preferences.getTodoConfigHome() + "/preferences";
-
-	@Option(names = {"-t", "--tag"},
-			required = false,
-			description = "Tags to search on the TODO File",
-			paramLabel = "Tags")
-	String searchTag = "";
 
 	@Option(names = {"-d", "--stopAtDeep"},
 			required = false,
@@ -94,14 +85,11 @@ public class ListCommand implements Runnable {
 			}
 			node.print();
 		} catch (IOException e) {
-			System.exit(Utils.STATUS_FAILURE);
+			System.exit(ExitStatus.FAILURE.getCode());
 		}
 	}
 
 	public Node search(Node node) {
-		if (!searchTag.isEmpty()) {
-			node = NodeOperations.withTag(searchTag, node);
-		}
 		if (searchStopAtDeep > 0) {
 			node = NodeOperations.stopAtDeep(searchStopAtDeep, node);
 		}

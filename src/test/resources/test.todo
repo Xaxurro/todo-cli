@@ -1,5 +1,3 @@
-@Daily
-@Routine
 1d [ ] Morning Routine
 	1d [x] Wake Up
 	1d [x] P a i n
@@ -11,7 +9,6 @@
 		- [ ] Sweep the floor
 	1d [x] Eat Breakfast
 
-@Coding
 - [/] Work
 	1 [ ] EndPoints
 		- [ ] /api/some/randomendpoint1
@@ -29,8 +26,6 @@
 	- [ ] AWS Course
 	- [ ] Angular Course
 
-@Workout
-@Routine
 - [ ] Workout
 	- [ ] Arms
 	- [ ] Legs

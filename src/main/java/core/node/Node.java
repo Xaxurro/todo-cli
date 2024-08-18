@@ -33,20 +33,8 @@ public class Node {
         int actualDeep = 0;
         Node previousNode = root;
 
-        List<String> actualTags = new ArrayList<>();
-
         for (String taskStr : taskStrList) {
-            if (taskStr.isEmpty()) {
-                actualTags = new ArrayList<>();
-                continue;
-            }
-
             if (taskStr.strip().startsWith(Preferences.getCommentStr())) {
-                continue;
-            }
-
-            if (taskStr.strip().startsWith(Preferences.getTagStr())) {
-                actualTags.add(taskStr.strip().substring(Preferences.getTagStr().length()));
                 continue;
             }
 
@@ -79,22 +67,9 @@ public class Node {
                 parent.addChildren(actualNode.getChildren());
             }
 
-            addTag(actualTags, actualNode);
-
             actualDeep = previousNode.getDeep();
         }
 
-    }
-
-    public static void addTag(List<String> tags, Node node) {
-        if (tags.isEmpty()) return;
-
-        for (String tag : tags) {
-            node.getTask().addTag(tag);
-        }
-        for (Node child : node.getChildren()) {
-            addTag(tags, child);
-        }
     }
 
     private static Node findParent(Node previousNode, int taskDeep, int actualDeep) {

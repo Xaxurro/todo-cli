@@ -13,13 +13,6 @@ public class NodeOperations {
 		return childConsumer;
 	}
 
-	public static Node withTag(String tag, Node node) {
-		Node root = Node.root();
-
-		node.forEachChild(childConsumer(root), child -> child.getTask().hasTag(tag));
-		return root;
-	}
-
 	public static Node stopAtDeep(int actualDeep, Node node) {
 		Node newNode = node.duplicate();
 
@@ -67,9 +60,10 @@ public class NodeOperations {
 		}
 		Node newNode = node.duplicate();
 		for (Node child : node.getChildren()) {
-			if (child.getTask().getStatus() != Status.NOT_DONE) {
-				newNode.addChild(NodeOperations.whereIsDone(child));
+			if (child.getTask().getStatus() == Status.NOT_DONE) {
+				continue;
 			}
+			newNode.addChild(NodeOperations.whereIsDone(child));
 		}
 
 		return newNode;
@@ -121,6 +115,7 @@ public class NodeOperations {
 			Status actualChildStatus = updateStatus(child);
 			if (previousChildStatus != null && previousChildStatus != actualChildStatus) {
 				hasDifferentStatus = true;
+				break;
 			}
 
 			previousChildStatus = actualChildStatus;

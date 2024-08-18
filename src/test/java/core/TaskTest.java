@@ -12,12 +12,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 class TaskTest {
 	String preferencesPathStr = "src/test/resources/preferences";
-	String todoPathStr = "src/test/resources/test.txt";
+	String todoPathStr = "src/test/resources/test.todo";
 
 	@BeforeAll
 	static void setTestProperties() {
@@ -29,7 +31,6 @@ class TaskTest {
 		Preferences.loadPreferences(preferencesPathStr);
 		Node tree = FileHandler.readFile(todoPathStr);
 
-		Assertions.assertEquals(10, NodeOperations.withTag("Daily", tree).size());
 		Assertions.assertEquals(12, NodeOperations.whereIsDone(tree).size());
 		Assertions.assertEquals(17, NodeOperations.whereIsAlmostDone(tree).size());
 		Assertions.assertEquals(34, NodeOperations.whereIsNotDone(tree).size());
@@ -39,10 +40,5 @@ class TaskTest {
 		Assertions.assertEquals(21, NodeOperations.withMaxPriority(2, tree).size());
 		Assertions.assertEquals(10, NodeOperations.withFrequency(Frequency.DAILY, tree).size());
 		Assertions.assertEquals(5, NodeOperations.withFrequency(Frequency.WEEKLY, tree).size());
-	}
-
-	@Test
-	void test2() throws IOException {
-		new CommandLine(new ListCommand()).execute("-f=" + todoPathStr, "-c=" + preferencesPathStr, "-t=Routine", "-s=not", "-F=daily", "-d=2");
 	}
 }
